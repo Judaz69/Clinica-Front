@@ -1,0 +1,147 @@
+<div class="row container mt-4">
+    <!--sidebar-->
+    <div class="col-3">
+        <h2>Opciones</h2>
+        <hr>
+
+        <ul class="list-group">
+            <li class="list-group-item">Agendar consulta</li>
+            <li class="list-group-item">Modificar datos</li>
+
+        </ul>
+
+    </div>
+
+    <!--Table-->
+    <div class="col">
+
+        <h2>Consultas</h2>
+        <hr>
+
+        <div 
+            *ngIf="hayError" 
+            class="alert alert-danger">
+            No se encontraron datos
+        </div>
+
+        <table class="flex-fill table table-hover">
+
+            <thead class="table-light">
+                <tr>
+
+                    <th>#</th>
+                    <th>Paciente</th>
+                    <th>Cedula</th>
+                    <th>Servicio</th>
+                    <th>Fecha</th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let consulta of consultas; let i = index">
+                    <td>{{i+1}}</td>
+                    <td>{{consulta.paciente.nombres}} {{consulta.paciente.apellidos}}</td>
+                    <td>{{consulta.paciente.cedula}}</td>
+                    <td>{{consulta.servicioEmpleado.tipoServicio.nombreServicio}}</td>
+                    <td>{{consulta.horaConsulta | date:'short'}}</td>
+                    <td>
+                        <button class="btn btn-primary" (click)="eliminar(consulta.id)">
+                            <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                            </svg>
+                        </button>        
+                    </td> 
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>Agendar nueva consulta</h3>
+        <div class="mb-3 row">
+            <div>
+                <form (ngSubmit)="buscarPaciente()">
+                    <input  type="text"
+                            name="cedula" 
+                            class="form-control"
+                            [(ngModel)]="cedula"
+                            placeholder="Buscar paciente...">
+                </form>
+            </div>
+
+            <table class="flex-fill table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Cedula</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                        
+                <tbody>
+                    <tr *ngFor="let paciente of pacientes; let i = index">
+                        <td>{{ i+1 }}</td>
+                        <td>{{paciente.nombres}} {{paciente.apellidos}}</td>
+                        <td>{{paciente.cedula}}</td>
+                        <td>
+                            <button 
+                            class="btn btn-outline-primary"
+                            type="button"
+                            value="Asignar"
+                            (click)="valores(paciente.id)">
+                            Asignar
+                            </button>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+            <table class="flex-fill table table-hover">
+                <thead class="table-light">
+                    <tr >
+                        <th>#</th>
+                        <th>Nombres</th>
+                        <th>Servicio</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                    
+                <tbody>
+                    <tr *ngFor="let servicio of servicios; let i = index">
+                        <td>{{ i+1 }}</td>
+                        <td>{{servicio.empleado.nombres}} {{servicio.empleado.apellidos}}</td>
+                        <td>{{servicio.tipoServicio.nombreServicio}}</td>
+                        <td>
+                            <button 
+                            class="btn btn-outline-primary"
+                            type="button"
+                            value="Asignar"
+                            (click)="valoresServicio(servicio.id)">
+                            Asignar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+        </table>
+
+        <form [formGroup]="form" (ngSubmit)="registrar()">
+
+            <input type="datetime-local" class="form-control" placeholder="fecha y hora" formControlName="horaConsulta">
+            
+            <span class="form-text text-danger d-flex justify-content-start" 
+                       *ngIf="campoEsValido('horaConsulta')">
+                       Ingrese todos los datos de la consulta
+                 </span>
+            
+            <div>
+                <button class="btn btn-primary" type="submit" class="btn btn-primary">Ingresar</button>
+            </div>
+
+        </form>
+        
+    </div>
+    
+</div>

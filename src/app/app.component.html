@@ -1,0 +1,25 @@
+
+<div *ngIf="!inicioSecion">
+    <body background="/assets/imagenes/usuarioFondo.jpg" 
+    class="m-0 vh-100 row justify-content-center align-items-center">
+        <div class="col-auto bg-light p-5 text-center rounded" style="width: 300px;">
+            <h2>Iniciar sesion</h2>
+            <hr>
+            <form action="">
+                <input type="text" class="form-control" placeholder="Usuario">
+                <br>
+                <input type="text" class="form-control" placeholder="Contraseña">
+                <br>
+                <input (click)="userLog()" routerLink="nav" type="button" value="Ingresar" class="btn btn-outline-primary">
+
+            </form>
+
+        </div>
+</body>
+</div>
+
+<div *ngIf="inicioSecion">
+    <h2><img src="/assets/imagenes/hospital.png" alt="" width="50" height="50"> Consultorio vida y esperanza</h2>
+    <app-menu></app-menu>
+    <router-outlet></router-outlet>
+</div>
