@@ -1,0 +1,78 @@
+<div class="card">
+    <div class="card-body">
+        <h2 mat-dialog-title class="text-center text-dark">Ingrese los datos del turno</h2>
+        <div>
+            <form (ngSubmit)="buscarPaciente()">
+                <input type="text" name="cedula" class="form-control" [(ngModel)]="cedula"
+                    placeholder="Buscar paciente...">
+            </form>
+        </div>
+
+        <table class="flex-fill table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Cedula</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let paciente of pacientes; let i = index">
+                    <td>{{ i+1 }}</td>
+                    <td>{{paciente.nombres}} {{paciente.apellidos}}</td>
+                    <td>{{paciente.cedula}}</td>
+                    <td>
+                        <button class="btn btn-outline-primary" type="button" value="Asignar"
+                            (click)="valores(paciente.id)">
+                            Asignar
+                        </button>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+        <table class="flex-fill table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Nombres</th>
+                    <th>Servicio</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let servicio of servicios; let i = index">
+                    <td>{{ i+1 }}</td>
+                    <td>{{servicio.empleado.nombres}} {{servicio.empleado.apellidos}}</td>
+                    <td>{{servicio.tipoServicio.nombreServicio}}</td>
+                    <td>
+                        <button class="btn btn-outline-primary" type="button" value="Asignar"
+                            (click)="valoresServicio(servicio.id)">
+                            Asignar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <form [formGroup]="form" (ngSubmit)="registrar()">
+
+            <input type="datetime-local" class="form-control" placeholder="fecha y hora" formControlName="horaConsulta">
+
+            <span class="form-text text-danger d-flex justify-content-start" *ngIf="campoEsValido('horaConsulta')">
+                Ingrese todos los datos de la consulta
+            </span>
+
+            <div>
+                <button class="btn btn-primary" type="submit" class="btn btn-primary">Ingresar</button>
+            </div>
+
+        </form>
+    </div>
+</div>

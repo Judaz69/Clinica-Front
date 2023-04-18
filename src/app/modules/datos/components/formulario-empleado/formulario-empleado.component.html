@@ -1,0 +1,61 @@
+<div class="card">
+    <div class="card-body">
+        <h2 mat-dialog-title class="text-center text-dark">Ingrese los datos del nuevo empleado</h2>
+        <form class="flex-fill" [formGroup]="form" (ngSubmit)="registrar()">
+        <div mat-dialog-content>
+            <h2>ingrese datos del nuevo empleado</h2>
+            <div class="mb-3 row input-group-text input-group-lg">
+
+                <input formControlName="nombres" type="text" class="form-control"
+                    onkeydown="return /[a-z, ]/i.test(event.key)" placeholder="Nombres">
+
+                <span class="form-text text-danger d-flex justify-content-start" *ngIf="campoEsValido('nombres')">
+                    Ingrese los nombres del empleado
+                </span>
+
+                <input formControlName="apellidos" type="text" class="form-control"
+                    onkeydown="return /[a-z, ]/i.test(event.key)" placeholder="Apellidos">
+
+                <span class="form-text text-danger d-flex justify-content-start" *ngIf="campoEsValido('apellidos')">
+                    Ingrese los apellidos del empleado
+                </span>
+
+                <input formControlName="cedula" type="text" class="form-control"
+                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                    placeholder="Cedula">
+
+                <span class="form-text text-danger d-flex justify-content-start" *ngIf="campoEsValido('cedula')">
+                    Ingrese la cedula del empleado
+                </span>
+
+            </div>
+
+            <div class="input-group-text input-group-lg">
+
+                <select class="form-select form-select-sm" [(ngModel)]="idTipoEmpleado"
+                    [ngModelOptions]="{standalone: true}">
+                    <option value="" disabled selected>Puesto</option>
+                    <option class="form-control" *ngFor="let tipoEmpleado of tipoEmpleados" [value]="tipoEmpleado.id">
+                        {{tipoEmpleado.nombreTipo}}
+                    </option>
+                </select>
+
+                <select class="form-select form-select-sm" [(ngModel)]="idServicio"
+                    [ngModelOptions]="{standalone: true}">
+                    <option value="" disabled selected>Servicio</option>
+                    <option class="form-control" *ngFor="let tipoServicio of tipoServicios" [value]="tipoServicio.id">
+                        {{tipoServicio.nombreServicio}}
+                    </option>
+                </select>
+            </div>
+
+        </div>
+        <div mat-dialog-action>
+            <div>
+                <button type="submit" class="btn btn-primary">Ingresar</button>
+                <button mat-dialog-close class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>

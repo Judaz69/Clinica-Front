@@ -1,0 +1,20 @@
+<div class="card">
+  <div class="card-body">
+    <h2 mat-dialog-title class="text-center text-dark">Ingrese el nuevo servicio</h2>
+    <form class="flex-fill" [formGroup]="form" (ngSubmit)="registrar()">
+      <div mat-dialog-content>
+        <div class="mb-3 row input-group-text input-group-lg">
+          <input formControlName="nombreServicio" class="form-control" type="text" placeholder="Nombre">
+          <span class="form-text text-danger d-flex justify-content-start" *ngIf="campoEsValido('nombreServicio')">
+            Ingrese el nombre del nuevo servicio
+          </span>
+        </div>
+
+        <div mat-dialog-action>
+          <button type="submit" class="btn btn-primary">Ingresar</button>
+          <button mat-dialog-close class="btn btn-secondary">Cancelar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
