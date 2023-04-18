@@ -2,10 +2,9 @@ import { Component } from '@angular/core';
 import { Empleados } from '../../interfaces/empleados.interface';
 import { EmpleadoServiciosService } from '../../services/empleado-servicios.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TipoEmpleado } from '../../interfaces/tipoEmpleado.interface';
-import { TipoEmpleadoService } from '../../services/tipo-empleado.service';
-import { ServiciosService } from '../../services/servicios.service';
-import { Servicios } from '../../interfaces/servicios.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { FormularioEmpleadoComponent } from '../../components/formulario-empleado/formulario-empleado.component';
+import { ModalBorrarEmpleadoComponent } from '../../components/modal-borrar-empleado/modal-borrar-empleado.component';
 
 @Component({
   selector: 'app-empleados',
@@ -27,16 +26,24 @@ export class EmpleadosComponent {
   cedula:string='';
   hayError: Boolean = false;
   empleados: Empleados [] = [];
-  tipoEmpleados: TipoEmpleado [] = [];
-  tipoServicios: Servicios [] = [];
   form: FormGroup;
   idTipoEmpleado: number = 0;
   idServicio: number = 0;
 
-  constructor(private tipoEmpleado: TipoEmpleadoService,
-              private Empleadoservice : EmpleadoServiciosService,
-              private servicioService : ServiciosService,
-              private fb: FormBuilder ){
+  headArray = [
+    {'Head': 'nombres', 'FieldName': 'Nombres'},
+    {'Head': 'apellidos', 'FieldName': 'Apellidos'},
+    {'Head': 'cedula', 'FieldName': 'Cedula'},
+    //{'Head': 'asignacion?.tipoEmpleado?.nombreTipo','FieldName': 'Puesto'},
+    {'Head': 'asignacion','FieldName': 'Puesto'},
+    //{'Head': 'servicio?.tipoServicio?.nombreServicio', 'FieldName': 'Servicio'},
+    {'Head': 'servicio', 'FieldName': 'Servicio'},
+    {'Head': 'Action', 'FieldName': ''}
+  ];
+
+  constructor(private Empleadoservice : EmpleadoServiciosService,
+              private fb: FormBuilder,
+              private dialog: MatDialog,){
 
     this.form = this.fb.group({
       nombres:['',[Validators.required, Validators.minLength(3)]],
@@ -46,13 +53,39 @@ export class EmpleadosComponent {
   }
 
   ngOnInit(): void {
-    this.listarPuestos();
-    this.listarServicios();
     this.listaEmpleados();
   }
 
-  campoEsValido(campo : string){
-    return this.form.controls[campo].errors && this.form.controls[campo].touched
+  abrirDialog()
+  {
+    const dialogRef = this.dialog.open(FormularioEmpleadoComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.listaEmpleados()
+    })
+  }
+
+  abrirDialogEditar(data: Empleados)
+  { 
+    const dialogRef = this.dialog.open(FormularioEmpleadoComponent, {
+      data,
+      
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.listaEmpleados()
+    })
+  }
+
+  
+  abrirDialogEliminar(data: Empleados)
+  {
+    const dialogRef = this.dialog.open(ModalBorrarEmpleadoComponent, {
+      data,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.listaEmpleados()
+    })
   }
 
 
@@ -60,40 +93,6 @@ export class EmpleadosComponent {
   {
     this.Empleadoservice.listaEmpleados().subscribe(data => {
       this.empleados = data;
-    })
-  }
-
-  listarServicios()
-  {
-    this.servicioService.listaServicios().subscribe(data => {
-      this.tipoServicios = data;
-    })
-  }
-
-  listarPuestos()
-  {
-    this.tipoEmpleado.listaPuestos().subscribe(data => {
-      this.tipoEmpleados = data;
-    })
-  }
-
-  registrar()
-  {
-    const data: any = {
-      nombres: this.form.get('nombres')?.value,
-      apellidos: this.form.get('apellidos')?.value,
-      cedula: this.form.get('cedula')?.value,
-    }
-
-    if (this.form.invalid)
-    {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    this.Empleadoservice.nuevoEmpleado(this.idTipoEmpleado,this.idServicio,data).subscribe(data =>{
-      this.form.reset();
-      this.listaEmpleados();
     })
   }
 
@@ -117,12 +116,5 @@ export class EmpleadosComponent {
       )
 
   }
-
-  eliminar(cedulaEmpleado:string){
-    this.Empleadoservice.eliminarEmpleado(cedulaEmpleado).subscribe(data => {
-      this.listaEmpleados();
-    })
-  }
-
 
 }

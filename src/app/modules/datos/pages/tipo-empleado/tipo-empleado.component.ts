@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { TipoEmpleadoService } from '../../services/tipo-empleado.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TipoEmpleado } from '../../interfaces/tipoEmpleado.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { FormularioTipoempleadoComponent } from '../../components/formulario-tipoempleado/formulario-tipoempleado.component';
+import { ModalEliminarPuestoComponent } from '../../components/modal-eliminar-puesto/modal-eliminar-puesto.component';
 
 @Component({
   selector: 'app-tipo-empleado',
@@ -26,10 +29,13 @@ export class TipoEmpleadoComponent implements OnInit {
 
   puestos: TipoEmpleado[]=[];
   form: FormGroup;
-  accion:string= 'agregar';
-  id: number | undefined;
+  headArray = [
+    {'Head': 'nombreTipo', 'FieldName': 'Puesto laboral'},
+    {'Head': 'Action', 'FieldName': ''}
+  ];
 
-  constructor(private tipoEmpleadoService : TipoEmpleadoService, private fb: FormBuilder) {
+  constructor(private tipoEmpleadoService : TipoEmpleadoService, private fb: FormBuilder,
+    private dialog: MatDialog) {
     this.form = this.fb.group({
       nombreTipo:['',[Validators.required, Validators.minLength(3)]],
     })
@@ -39,60 +45,41 @@ export class TipoEmpleadoComponent implements OnInit {
     this.listarPuestos();
   }
 
-  campoEsValido(campo : string){
-    return this.form.controls[campo].errors && this.form.controls[campo].touched
+  abrirDialog()
+  {
+    const dialogRef = this.dialog.open(FormularioTipoempleadoComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.listarPuestos();
+    })
+  }
+
+  abrirDialogEditar(data: TipoEmpleado)
+  { 
+    const dialogRef = this.dialog.open(FormularioTipoempleadoComponent, {
+      data,
+      
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.listarPuestos();
+    })
+  }
+
+  abrirDialogEliminar(data: TipoEmpleado)
+  {
+    const dialogRef = this.dialog.open(ModalEliminarPuestoComponent, {
+      data,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.listarPuestos();
+    })
   }
 
   listarPuestos()
   {
     this.tipoEmpleadoService.listaPuestos().subscribe(data => {
       this.puestos = data;
-    })
-  }
-
-  registrar()
-  {
-    const data: any = {
-      nombreTipo: this.form.get('nombreTipo')?.value
-    }
-
-    if (this.form.invalid)
-    {
-      this.form.markAllAsTouched();
-      return;
-    }
-    
-    if(this.id == undefined)
-    {
-      this.tipoEmpleadoService.nuevoPuesto(data).subscribe((data) =>{
-        this.form.reset();
-        this.listarPuestos();
-      })
-    }
-    else
-    {
-      data.id = this.id;
-      this.tipoEmpleadoService.actualizarPuesto(this.id,data).subscribe(data => {
-        this.accion='agregar';
-        this.id = undefined;
-        this.form.reset();
-        this.listarPuestos();
-      })
-    } 
-  }
-
-  eliminar(id: number){
-    this.tipoEmpleadoService.eliminarPuesto(id).subscribe(data => {
-      this.listarPuestos();
-    })
-  }
-
-  editarPuesto(puesto: any){
-    this.accion='Editar';
-    this.id= puesto.id;
-
-    this.form.patchValue({
-      nombreTipo: puesto.nombreTipo
     })
   }
 

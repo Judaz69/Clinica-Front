@@ -1,9 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { ClienteServiciosService } from '../../services/cliente-servicios.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Paciente } from '../../interfaces/consultas.interface';
 import { ActivatedRoute } from '@angular/router';
 import { Pacientes } from '../../interfaces/clienter.interface';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-formulario-paciente',
@@ -15,13 +16,16 @@ import { Pacientes } from '../../interfaces/clienter.interface';
 export class FormularioPacienteComponent implements OnInit {
 
   form: FormGroup;
-  @Input() id: number | undefined;
-  @Input() paciente: Paciente | undefined;
+  id: number | undefined;
 
   pacientes: Pacientes [] = [];
 
   
-  constructor(private clienteServicio: ClienteServiciosService, private activatedRoute: ActivatedRoute , private fb: FormBuilder)
+  constructor(private clienteServicio: ClienteServiciosService, 
+              private activatedRoute: ActivatedRoute, 
+              private fb: FormBuilder,
+              private _snackBar: MatSnackBar,
+              @Inject(MAT_DIALOG_DATA) public data: Pacientes)
   {
     this.form = this.fb.group({
       nombres:['', [Validators.required, Validators.minLength(3)]],
@@ -31,6 +35,7 @@ export class FormularioPacienteComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.form.patchValue(this.data);
   }
 
   campoEsValido(campo : string){
@@ -47,6 +52,7 @@ export class FormularioPacienteComponent implements OnInit {
   registrar()
   {
     const data: any = {
+      id: this.data == null ? 0 : this.data.id,
       nombres: this.form.get('nombres')?.value,
       apellidos: this.form.get('apellidos')?.value,
       cedula: this.form.get('cedula')?.value
@@ -58,29 +64,27 @@ export class FormularioPacienteComponent implements OnInit {
       return;
     }
 
-    if(this.id == undefined)
+    if(this.data)
     {
-      this.clienteServicio.nuevoPaciente(data).subscribe(data =>{
+      this.clienteServicio.actualizarPaciente(this.data.id,data).subscribe(data => {
         this.form.reset();
+        this._snackBar.open('Datos editados con exito', 'cerrar', {
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          duration: 3000
+        });
       })
     }
     else
     {
-      data.id = this.id;
-      this.clienteServicio.actualizarPaciente(this.id,data).subscribe(data => {
-        this.id = undefined;
+      this.clienteServicio.nuevoPaciente(data).subscribe(data =>{
         this.form.reset();
+        this._snackBar.open('El paciente fue ingresado con exito', 'cerrar', {
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          duration: 3000
+        });
       })
     }   
-  }
-
-  editarPaciente(paciente: any){
-    this.id= paciente.id;
-
-    this.form.patchValue({
-      nombres: paciente.nombres,
-      apellidos: paciente.apellidos,
-      cedula: paciente.cedula, 
-    })
   }
 }

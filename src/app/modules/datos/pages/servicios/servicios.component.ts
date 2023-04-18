@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ServiciosService } from '../../services/servicios.service';
 import { Servicios } from '../../interfaces/servicios.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { FormularioServiciosComponent } from '../../components/formulario-servicios/formulario-servicios.component';
+import { ModalEliminarComponent } from '../../components/modal-eliminar/modal-eliminar.component';
 
 @Component({
   selector: 'app-servicios',
@@ -26,15 +29,54 @@ export class ServiciosComponent implements OnInit {
   form: FormGroup;
   accion:string= 'agregar';
   id: number | undefined;
+  headArray = [
+    {'Head': 'nombreServicio', 'FieldName': 'Nombre Servicio'},
+    {'Head': 'Action', 'FieldName': ''}
+  ];
 
-  constructor(private serviciosService: ServiciosService, private fb: FormBuilder) {
+  constructor(private serviciosService: ServiciosService, 
+              private fb: FormBuilder, 
+              private dialog: MatDialog,
+  ){
     this.form = this.fb.group({
       nombreServicio:['',[Validators.required, Validators.minLength(3)]],
     })
   }
 
   ngOnInit(): void {
+    this.form
     this.listarServicios();
+  }
+
+  abrirDialog()
+  {
+    const dialogRef = this.dialog.open(FormularioServiciosComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.listarServicios();
+    })
+  }
+
+  abrirDialogEditar(data: Servicios)
+  { 
+    const dialogRef = this.dialog.open(FormularioServiciosComponent, {
+      data,
+      
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.listarServicios();
+    })
+  }
+
+  abrirDialogEliminar(data: Servicios)
+  {
+    const dialogRef = this.dialog.open(ModalEliminarComponent, {
+      data,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.listarServicios();
+    })
   }
 
   campoEsValido(campo : string){
@@ -45,52 +87,6 @@ export class ServiciosComponent implements OnInit {
   {
     this.serviciosService.listaServicios().subscribe(data => {
       this.servicios = data;
-    })
-  }
-
-  registrar()
-  {
-    const data: any = {
-      nombreServicio: this.form.get('nombreServicio')?.value
-    }
-
-    if (this.form.invalid)
-    {
-      this.form.markAllAsTouched();
-      return;
-    }
-    
-    if(this.id == undefined)
-    {
-      this.serviciosService.nuevoServicio(data).subscribe((data) =>{
-        this.form.reset();
-        this.listarServicios();
-      })
-    }
-    else
-    {
-      data.id = this.id;
-      this.serviciosService.actualizarServicio(this.id,data).subscribe(data => {
-        this.accion='agregar';
-        this.id = undefined;
-        this.form.reset();
-        this.listarServicios();
-      })
-    } 
-  }
-
-  eliminar(id: number){
-    this.serviciosService.eliminarServicio(id).subscribe(data => {
-      this.listarServicios();
-    })
-  }
-
-  editarServicio(servicio: any){
-    this.accion='Editar';
-    this.id= servicio.id;
-
-    this.form.patchValue({
-      nombreServicio: servicio.nombreServicio
     })
   }
 

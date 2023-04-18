@@ -4,8 +4,9 @@ import { ConsultasServiciosService } from '../../services/consultas-servicios.se
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClienteServiciosService } from '../../services/cliente-servicios.service';
 import { Pacientes } from '../../interfaces/clienter.interface';
-import { AsignacionServicio } from '../../../datos/interfaces/asignacionServicio.interface';
-import { AsignacionServicioService } from '../../../datos/services/asignacion-servicio.service';
+import { MatDialog } from '@angular/material/dialog';
+import { FormularioTurnosComponent } from '../../components/formulario-turnos/formulario-turnos.component';
+import { ModalEliminarTurnoComponent } from '../../components/modal-eliminar-turno/modal-eliminar-turno.component';
 
 @Component({
   selector: 'app-consultas',
@@ -20,20 +21,27 @@ import { AsignacionServicioService } from '../../../datos/services/asignacion-se
 })
 export class ConsultasComponent {
 
-  cedula:string='';
   hayError: Boolean = false;
   consultas: Consulta [] = [];
   pacientes: Pacientes [] = [];
-  servicios: AsignacionServicio[] = [];
+  cedula:string='';
+  
   form: FormGroup;
   idPaciente: number = 0;
   idServicio: number = 0;
-  id: number | undefined;
+
+  headArray = [
+    {'Head': 'paciente', 'FieldName': 'Nombres'},
+    {'Head': 'paciente', 'FieldName': 'Apellidos'},
+    {'Head': 'servicioEmpleado', 'FieldName': 'Cedula'},
+    {'Head': 'horaConsulta', 'FieldName': 'Hora'},
+    {'Head': 'Action', 'FieldName': ''}
+  ];
 
   constructor(private consultaServicio: ConsultasServiciosService,
               private pacienteServicio: ClienteServiciosService,
-              private asignacionServicio: AsignacionServicioService,
-              private fb: FormBuilder) 
+              private fb: FormBuilder,
+              private dialog: MatDialog,) 
   {
 
     this.form = this.fb.group({
@@ -45,65 +53,44 @@ export class ConsultasComponent {
   
   ngOnInit(): void {
     this.listar();
-    this.listarServicios();
   }
 
-  campoEsValido(campo : string){
-    return this.form.controls[campo].errors && this.form.controls[campo].touched
-  }
-
-  valores(valorPaciente: number)
+  abrirDialog()
   {
-    this.idPaciente = valorPaciente;
+    const dialogRef = this.dialog.open(FormularioTurnosComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.listar();
+    })
   }
 
-  valoresServicio(valorServicio: number)
+  abrirDialogEditar(data: Consulta)
+  { 
+    const dialogRef = this.dialog.open(FormularioTurnosComponent, {
+      data,
+      
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.listar();
+    })
+  }
+
+  
+  abrirDialogEliminar(data: Consulta)
   {
-    this.idServicio = valorServicio;
+    const dialogRef = this.dialog.open(ModalEliminarTurnoComponent, {
+      data,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.listar();
+    })
   }
 
   listar()
   {
     this.consultaServicio.listaConsultas().subscribe(data => {
       this.consultas = data;
-    })
-  }
-
-  listarServicios()
-  {
-    this.asignacionServicio.listaAsignaciones().subscribe(data => {
-      this.servicios = data;
-    })
-  }
-
-  registrar()
-  {
-    const asignarPaciente: number = this.idPaciente;
-    const asignarServicio: number = this.idServicio;
-
-    const data: any = {
-      pacienteId: asignarPaciente,
-      asignacionTipoServicioId: asignarServicio,
-      horaConsulta: this.form.get('horaConsulta')?.value,
-    }
-
-    if (this.form.invalid)
-    {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    this.consultaServicio.nuevaConsulta(data).subscribe(data =>{
-      this.form.reset();
-      this.idPaciente = 0;
-      this.idServicio = 0;
-      this.listar();
-    })
-  }
-
-  eliminar(id: number){
-    this.consultaServicio.eliminarConsulta(id).subscribe(data => {
-      this.listar();
     })
   }
 

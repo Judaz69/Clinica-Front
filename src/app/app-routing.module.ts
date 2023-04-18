@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { InicioComponent } from './clinica/pages/Inicio/inicio.component';
 
 
 const routes: Routes = [
-    {
-        path: 'inicio',
-        component: InicioComponent,
-        pathMatch: 'full'
+    {   path: '',
+        redirectTo: 'auth', 
+        pathMatch: 'full', 
+        
     },
     {
         path: 'auth',
@@ -20,10 +19,10 @@ const routes: Routes = [
     {
         path: 'datos',
         loadChildren: () => import ('./modules/datos/datos.module').then(m => m.DatosModule)
-    },  
+    },
     {
-        path: '**',
-        redirectTo: 'inicio'
+        path: 'dashboard',
+        loadChildren: () => import ('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)
     }
 ]
 

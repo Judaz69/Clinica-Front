@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -13,4 +14,10 @@ import { Component } from '@angular/core';
 })
 export class MenuComponent {
 
+  constructor(private router: Router){}
+
+  logOut()
+  {
+    this.router.navigate(['./auth']);
+  }
 }

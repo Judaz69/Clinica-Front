@@ -7,27 +7,33 @@
             <a class="nav-link active" aria-current="page">Inicio</a>
           </li>
 
-          <li routerLink="datos/empleados" class="nav-item">
+          <li routerLink="/datos/empleados" class="nav-item">
             <a class="nav-link active">Empleados</a>
           </li>
 
-          <li routerLink="turnos/pacientes" class="nav-item">
+          <li routerLink="/turnos/pacientes" class="nav-item">
             <a class="nav-link active">Pacientes</a>
           </li>
 
-          <li routerLink="turnos/consultas" class="nav-item">
+          <li routerLink="/turnos/consultas" class="nav-item">
             <a class="nav-link active">Consultas</a>
           </li>
 
-          <li routerLink="datos/servicios" class="nav-item">
+          <li routerLink="/datos/servicios" class="nav-item">
             <a class="nav-link active">Servicios</a>
           </li>
 
-          <li routerLink="datos/puestos" class="nav-item">
+          <li routerLink="/datos/puestos" class="nav-item">
             <a class="nav-link active">Puestos laborales</a>
-          </li>
-
+          </li>   
         </ul>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+          <li  class="nav-item">
+            <button class="btn btn-secondary" (click)="logOut()">Cerrar Sesion</button>
+          </li>
+        </div>
+        
       </div>
     </div>
   </nav>

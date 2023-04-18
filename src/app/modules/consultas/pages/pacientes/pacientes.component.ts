@@ -2,6 +2,9 @@ import { Component, OnInit} from '@angular/core';
 import { Pacientes } from '../../interfaces/clienter.interface';
 import { ClienteServiciosService } from '../../services/cliente-servicios.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { FormularioPacienteComponent } from '../../components/formulario-paciente/formulario-paciente.component';
+import { BorrarPacienteComponent } from '../../components/borrar-paciente/borrar-paciente.component';
 
 
 @Component({
@@ -27,19 +30,17 @@ export class PacientesComponent implements OnInit {
   accion:string= 'agregar';
   id: number | undefined;
   cedulaEnviar: string | undefined;
-  
-  pacienteEnviar: Pacientes = 
-  {
-    id: 0,
-    nombres:   '',
-    apellidos: '',
-    cedula:    '',
-  };
-
   form: FormGroup;
 
+  headArray = [
+    {'Head': 'nombres', 'FieldName': 'Nombres'},
+    {'Head': 'apellidos', 'FieldName': 'Apellidos'},
+    {'Head': 'cedula', 'FieldName': 'Cedula'},
+    {'Head': 'Action', 'FieldName': ''}
+  ];
+
   constructor(private clienteServicio: ClienteServiciosService,
-              
+              private dialog: MatDialog,
               private fb: FormBuilder) {
     this.form = this.fb.group({
       nombres:['', [Validators.required, Validators.minLength(3)]],
@@ -50,6 +51,37 @@ export class PacientesComponent implements OnInit {
 
   ngOnInit(): void {
     this.listar();
+  }
+
+  abrirDialog()
+  {
+    const dialogRef = this.dialog.open(FormularioPacienteComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.listar();
+    })
+  }
+
+  abrirDialogEditar(data: Pacientes)
+  { 
+    const dialogRef = this.dialog.open(FormularioPacienteComponent, {
+      data,
+      
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.listar();
+    })
+  }
+
+  abrirDialogEliminar(data: Pacientes)
+  {
+    const dialogRef = this.dialog.open(BorrarPacienteComponent, {
+      data,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.listar();
+    })
   }
 
   listar()
@@ -81,26 +113,4 @@ export class PacientesComponent implements OnInit {
 
   }
 
-  enviarCedula(cedula: string)
-  {
-    this.cedulaEnviar = cedula;
-  }
-
-  enviarPaciente(data: Pacientes)
-  {
-    this.pacienteEnviar = data;
-  }
-/*
-  
-  editarPaciente(paciente: any){
-    this.accion='Editar';
-    this.id= paciente.id;
-
-    this.form.patchValue({
-      nombres: paciente.nombres,
-      apellidos: paciente.apellidos,
-      cedula: paciente.cedula, 
-    })
-  }
-  */ 
 }

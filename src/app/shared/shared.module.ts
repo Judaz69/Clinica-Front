@@ -2,19 +2,21 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuComponent } from './menu/menu.component';
 import { AppRoutingModule } from '../app-routing.module';
+import { DataTableComponent } from './data-table/data-table.component';
 
 
 
 @NgModule({
   declarations: [
-    MenuComponent
+    MenuComponent,
+    DataTableComponent
   ],
   exports: [
-    MenuComponent
+    MenuComponent,
+    DataTableComponent
   ],
   imports: [
-    CommonModule,
-    AppRoutingModule
+    CommonModule
   ]
 })
 export class SharedModule { 
