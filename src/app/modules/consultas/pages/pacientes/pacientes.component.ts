@@ -5,6 +5,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { FormularioPacienteComponent } from '../../components/formulario-paciente/formulario-paciente.component';
 import { BorrarPacienteComponent } from '../../components/borrar-paciente/borrar-paciente.component';
+import { DataTable } from 'src/app/shared/interfaces/dataTable.interface';
+import { TableConfig } from 'src/app/shared/interfaces/tableConfigModel';
 
 
 @Component({
@@ -31,13 +33,11 @@ export class PacientesComponent implements OnInit {
   id: number | undefined;
   cedulaEnviar: string | undefined;
   form: FormGroup;
-
-  headArray = [
-    {'Head': 'nombres', 'FieldName': 'Nombres'},
-    {'Head': 'apellidos', 'FieldName': 'Apellidos'},
-    {'Head': 'cedula', 'FieldName': 'Cedula'},
-    {'Head': 'Action', 'FieldName': ''}
-  ];
+  tableColumns: DataTable[] = [];
+  tableConfig: TableConfig =
+  {
+    showActions: true
+  }
 
   constructor(private clienteServicio: ClienteServiciosService,
               private dialog: MatDialog,
@@ -51,6 +51,16 @@ export class PacientesComponent implements OnInit {
 
   ngOnInit(): void {
     this.listar();
+    this.setTableColumns();
+  }
+
+  setTableColumns()
+  {
+    this.tableColumns = [
+      {label: 'Nombres', def: 'nombres', dataKey: 'nombres'},
+      {label: 'Apellidos', def: 'apellidos', dataKey: 'apellidos'},
+      {label: 'Cedula', def: 'cedula', dataKey: 'cedula'}
+    ]
   }
 
   abrirDialog()
@@ -91,26 +101,24 @@ export class PacientesComponent implements OnInit {
     })
   }
 
-  buscar(){
-    this.hayError = false;  
+  buscar() {
+    this.hayError = false;
     this.pacientes = [];
-    if(!this.cedula)
-    {
+    if (!this.cedula) {
       this.listar();
       return;
     }
-    this.clienteServicio.buscarPacientes(this.cedula).
-      subscribe( (pacientes) => {
-
-        console.log(pacientes);
-        this.pacientes.push(pacientes);
-
-      }, (err) => {
-
-        this.hayError = true;
-      }
-      )
-
+    this.clienteServicio.buscarPacientes(this.cedula)
+      .subscribe(
+        (pacientes) => {
+          this.setTableColumns();
+          this.pacientes = pacientes ? [pacientes] : [];
+          this.tableConfig = {showActions:true}
+        },
+        (err) => {
+          this.hayError = true;
+        }
+      );
   }
 
 }

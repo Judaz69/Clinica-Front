@@ -1,28 +1,21 @@
 <div class="row container mt-4">
     <div class="col-3">
-        <h2>Opciones</h2>
+        <h2 class="text-white">Opciones</h2>
         <hr>
 
         <ul class="d-flex align-items-stretch list-group">
-            <button (click)="abrirDialog()" class="btn btn-primary">Nuevo puesto laboral</button>
+            <button (click)="abrirDialog()" class="btn btn-dark">Nuevo puesto laboral</button>
         </ul>
 
     </div>
 
     <div class="col">
-        <h2>Puestos laborales</h2>
+        <h2 class="text-white">Puestos laborales</h2>
         <hr>
-        <div class="bg-light card">
-            <div class="card-body">
-                <app-data-table 
-                [HeadArray]="headArray" 
-                [GridArray]="puestos" 
-                (onEdit)="abrirDialogEditar($event)" 
-                (onDelete)="abrirDialogEliminar($event)">
-            </app-data-table>
-            </div>
-        </div>
 
+                <app-data-table [data]="puestos" [columns]="tableColumns" (onEdit)="abrirDialogEditar($event)"
+                (onDelete)="abrirDialogEliminar($event)" [config]="tableConfig">
+            </app-data-table>
 
     </div>
 </div>

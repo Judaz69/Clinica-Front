@@ -7,6 +7,8 @@ import { Pacientes } from '../../interfaces/clienter.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { FormularioTurnosComponent } from '../../components/formulario-turnos/formulario-turnos.component';
 import { ModalEliminarTurnoComponent } from '../../components/modal-eliminar-turno/modal-eliminar-turno.component';
+import { TableConfig } from 'src/app/shared/interfaces/tableConfigModel';
+import { DataTable } from 'src/app/shared/interfaces/dataTable.interface';
 
 @Component({
   selector: 'app-consultas',
@@ -25,6 +27,11 @@ export class ConsultasComponent {
   consultas: Consulta [] = [];
   pacientes: Pacientes [] = [];
   cedula:string='';
+  tableColumns: DataTable[] = [];
+  tableConfig: TableConfig =
+  {
+    showActions: true
+  }
   
   form: FormGroup;
   idPaciente: number = 0;
@@ -53,6 +60,17 @@ export class ConsultasComponent {
   
   ngOnInit(): void {
     this.listar();
+    this.setTableColumns();
+  }
+
+  setTableColumns()
+  {
+    this.tableColumns = [
+      {label: 'Nombres', def: 'nombres', dataKey: 'paciente.nombres', dataType: 'object'},
+      {label: 'Apellidos', def: 'apellidos', dataKey: 'paciente.apellidos', dataType: 'object'},
+      {label: 'Cedula', def: 'cedula', dataKey: 'paciente.cedula', dataType: 'object'},
+      {label: 'hora de la consulta', def: 'horaConsulta', dataKey: 'horaConsulta', dataType: 'date'},
+    ]
   }
 
   abrirDialog()
@@ -94,24 +112,24 @@ export class ConsultasComponent {
     })
   }
 
-  buscarPaciente(){
-    this.hayError = false;  
+  buscar() {
+    this.hayError = false;
     this.pacientes = [];
-    if(!this.cedula)
-    {
+    if (!this.cedula) {
+      this.listar();
       return;
     }
-    this.pacienteServicio.buscarPacientes(this.cedula).
-      subscribe( (pacientes) => {
-
-        this.pacientes.push(pacientes);
-
-      }, (err) => {
-
-        this.hayError = true;
-      }
-      )
-
+    this.pacienteServicio.buscarPacientes(this.cedula)
+      .subscribe(
+        (pacientes) => {
+          this.setTableColumns();
+          this.pacientes = pacientes ? [pacientes] : [];
+          this.tableConfig = {showActions:true}
+        },
+        (err) => {
+          this.hayError = true;
+        }
+      );
   }
 
 }

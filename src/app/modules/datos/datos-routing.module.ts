@@ -9,6 +9,7 @@ import { InicioComponent } from '../dashboard/pages/inicio/inicio.component';
 const routes: Routes = [
   {
     path: '',
+    component: InicioComponent,
     children: [
       {path: 'empleados', component: EmpleadosComponent},
       {path: 'servicios', component: ServiciosComponent},

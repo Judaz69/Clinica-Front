@@ -3,23 +3,20 @@ import { CommonModule } from '@angular/common';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { InicioComponent } from './pages/inicio/inicio.component';
-import { AppRoutingModule } from 'src/app/app-routing.module';
-import { SharedModule } from 'src/app/shared/shared.module';
-import { ConsultasModule } from '../consultas/consultas.module';
-import { DatosModule } from '../datos/datos.module';
+import { MenuDashComponent } from './components/menu-dash/menu-dash.component';
 
 
 @NgModule({
   declarations: [
-    InicioComponent
+    InicioComponent,
+    MenuDashComponent
   ],
   exports: [
     InicioComponent
   ],
   imports: [
     CommonModule,
-    DashboardRoutingModule,
-    SharedModule
+    DashboardRoutingModule
   ]
 })
 export class DashboardModule { }

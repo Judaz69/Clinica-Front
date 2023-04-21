@@ -5,6 +5,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { FormularioServiciosComponent } from '../../components/formulario-servicios/formulario-servicios.component';
 import { ModalEliminarComponent } from '../../components/modal-eliminar/modal-eliminar.component';
+import { DataTable } from 'src/app/shared/interfaces/dataTable.interface';
+import { TableConfig } from 'src/app/shared/interfaces/tableConfigModel';
 
 @Component({
   selector: 'app-servicios',
@@ -29,10 +31,11 @@ export class ServiciosComponent implements OnInit {
   form: FormGroup;
   accion:string= 'agregar';
   id: number | undefined;
-  headArray = [
-    {'Head': 'nombreServicio', 'FieldName': 'Nombre Servicio'},
-    {'Head': 'Action', 'FieldName': ''}
-  ];
+  tableColumns: DataTable[] = [];
+  tableConfig: TableConfig =
+  {
+    showActions: true
+  }
 
   constructor(private serviciosService: ServiciosService, 
               private fb: FormBuilder, 
@@ -44,8 +47,15 @@ export class ServiciosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.form
     this.listarServicios();
+    this.setTableColumns();
+  }
+
+  setTableColumns()
+  {
+    this.tableColumns = [
+      {label: 'Servicios disponibles', def: 'nombreServicio', dataKey: 'nombreServicio'}
+    ]
   }
 
   abrirDialog()

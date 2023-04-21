@@ -5,6 +5,8 @@ import { TipoEmpleado } from '../../interfaces/tipoEmpleado.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { FormularioTipoempleadoComponent } from '../../components/formulario-tipoempleado/formulario-tipoempleado.component';
 import { ModalEliminarPuestoComponent } from '../../components/modal-eliminar-puesto/modal-eliminar-puesto.component';
+import { DataTable } from 'src/app/shared/interfaces/dataTable.interface';
+import { TableConfig } from 'src/app/shared/interfaces/tableConfigModel';
 
 @Component({
   selector: 'app-tipo-empleado',
@@ -29,6 +31,12 @@ export class TipoEmpleadoComponent implements OnInit {
 
   puestos: TipoEmpleado[]=[];
   form: FormGroup;
+  tableColumns: DataTable[] = [];
+  tableConfig: TableConfig =
+  {
+    showActions: true
+  }
+
   headArray = [
     {'Head': 'nombreTipo', 'FieldName': 'Puesto laboral'},
     {'Head': 'Action', 'FieldName': ''}
@@ -43,6 +51,14 @@ export class TipoEmpleadoComponent implements OnInit {
 
   ngOnInit(): void {
     this.listarPuestos();
+    this.setTableColumns();
+  }
+
+  setTableColumns()
+  {
+    this.tableColumns = [
+      {label: 'Puestos laborales', def: 'nombreTipo', dataKey: 'nombreTipo'},
+    ]
   }
 
   abrirDialog()

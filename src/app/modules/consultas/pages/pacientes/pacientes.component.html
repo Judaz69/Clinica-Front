@@ -1,16 +1,16 @@
 <div class="row container mt-4">
     <div class="col-3">
-        <h2>Opciones</h2>
+        <h2 class="text-white">Opciones</h2>
         <hr>
 
         <ul class="list-group">
-            <button (click)="abrirDialog()" class="btn btn-primary">Nuevo paciente</button>
+            <button (click)="abrirDialog()" class="btn btn-dark">Nuevo paciente</button>
         </ul>
 
     </div>
 
     <div class="col">
-        <h2>Pacientes</h2>
+        <h2 class="text-white">Pacientes</h2>
         <hr>
         <div>
             <form (ngSubmit)="buscar()">
@@ -23,18 +23,9 @@
             No se encontraron datos
         </div>
         <hr>
-        <div class="bg-light card">
-            <div class="card-body">
-                <div class="card-body">
-                    <app-data-table 
-                        [HeadArray]="headArray" 
-                        [GridArray]="pacientes" 
-                        (onEdit)="abrirDialogEditar($event)" 
-                        (onDelete)="abrirDialogEliminar($event)">
-                    </app-data-table>
-            </div>
-
-        </div>
+        <app-data-table [data]="pacientes" [columns]="tableColumns" (onEdit)="abrirDialogEditar($event)"
+        (onDelete)="abrirDialogEliminar($event)" [config]="tableConfig">
+    </app-data-table>
 
     </div>
 

@@ -73,7 +73,7 @@ export class FormularioEmpleadoComponent implements OnInit {
     {
       this.Empleadoservice.nuevoEmpleado(this.idTipoEmpleado,this.idServicio,data).subscribe(data =>{
         this.form.reset();
-        this._snackBar.open('El paciente fue ingresado con exito', 'cerrar', {
+        this._snackBar.open('El Empleado fue ingresado con exito', 'cerrar', {
           horizontalPosition: 'center',
           verticalPosition: 'top',
           duration: 3000

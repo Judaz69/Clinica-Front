@@ -1,22 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MenuComponent } from './menu/menu.component';
 import { AppRoutingModule } from '../app-routing.module';
+import {MatTableModule} from '@angular/material/table';
 import { DataTableComponent } from './data-table/data-table.component';
+import { ColumnValuePipe } from './pipes/column-value.pipe';
 
 
 
 @NgModule({
   declarations: [
-    MenuComponent,
-    DataTableComponent
+    DataTableComponent,
+    ColumnValuePipe
   ],
   exports: [
-    MenuComponent,
     DataTableComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatTableModule
   ]
 })
 export class SharedModule { 
