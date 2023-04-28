@@ -4,9 +4,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TipoEmpleado } from '../../interfaces/tipoEmpleado.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { FormularioTipoempleadoComponent } from '../../components/formulario-tipoempleado/formulario-tipoempleado.component';
-import { ModalEliminarPuestoComponent } from '../../components/modal-eliminar-puesto/modal-eliminar-puesto.component';
+import { ModalEliminarComponent } from 'src/app/shared/modal-eliminar/modal-eliminar.component';
 import { DataTable } from 'src/app/shared/interfaces/dataTable.interface';
 import { TableConfig } from 'src/app/shared/interfaces/tableConfigModel';
+import { TablaDatos } from 'src/app/shared/interfaces/tablaDatos.interface';
 
 @Component({
   selector: 'app-tipo-empleado',
@@ -83,8 +84,13 @@ export class TipoEmpleadoComponent implements OnInit {
 
   abrirDialogEliminar(data: TipoEmpleado)
   {
-    const dialogRef = this.dialog.open(ModalEliminarPuestoComponent, {
-      data,
+    const tabla: TablaDatos = { nombre: 'tipoEmpleado', head: 'puesto' }
+
+    const dialogRef = this.dialog.open(ModalEliminarComponent, {
+      data:{
+        datos:data,
+        nombreTabla: tabla
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {

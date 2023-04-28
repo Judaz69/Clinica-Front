@@ -3,12 +3,12 @@ class="m-0 vh-100 row justify-content-center align-items-center">
     <div class="col-auto bg-light p-5 text-center rounded" style="width: 300px;">
         <h2>Iniciar sesion</h2>
         <hr>
-        <form action="">
-            <input type="text" class="form-control" placeholder="Usuario">
+        <form [formGroup]="miFormulario" (ngSubmit)="login()">
+            <input type="text" class="form-control" placeholder="Usuario" formControlName="email">
             <br>
-            <input type="text" class="form-control" placeholder="Contraseña">
+            <input type="password" class="form-control" placeholder="Contraseña" formControlName="password">
             <br>
-            <input (click)="login()" routerLink="nav" type="button" value="Ingresar" class="btn btn-outline-primary">
+            <input type="submit" value="Ingresar" class="btn btn-outline-primary">
 
         </form>
 

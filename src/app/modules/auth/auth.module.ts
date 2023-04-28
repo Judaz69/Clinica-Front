@@ -5,6 +5,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { AuthRoutingModule } from './auth-routing.module';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { MainComponent } from './pages/main/main.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -23,7 +24,9 @@ import { MainComponent } from './pages/main/main.component';
   imports: [
     CommonModule,
     MatGridListModule,
-    AuthRoutingModule
+    AuthRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
   ]
 })
 export class AuthModule { }

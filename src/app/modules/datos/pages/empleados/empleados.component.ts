@@ -4,9 +4,11 @@ import { EmpleadoServiciosService } from '../../services/empleado-servicios.serv
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { FormularioEmpleadoComponent } from '../../components/formulario-empleado/formulario-empleado.component';
-import { ModalBorrarEmpleadoComponent } from '../../components/modal-borrar-empleado/modal-borrar-empleado.component';
 import { DataTable } from 'src/app/shared/interfaces/dataTable.interface';
 import { TableConfig } from 'src/app/shared/interfaces/tableConfigModel';
+import { TablaDatos } from 'src/app/shared/interfaces/tablaDatos.interface';
+import { ModalEliminarComponent } from 'src/app/shared/modal-eliminar/modal-eliminar.component';
+
 
 @Component({
   selector: 'app-empleados',
@@ -56,11 +58,11 @@ export class EmpleadosComponent {
 
   setTableColumns() {
     this.tableColumns = [
-      { label: 'Nombre', def: 'nombres', dataKey: 'nombres' },
-      { label: 'Apellido', def: 'apellidos', dataKey: 'apellidos' },
+      { label: 'Nombres', def: 'nombres', dataKey: 'nombres' },
+      { label: 'Apellidos', def: 'apellidos', dataKey: 'apellidos' },
       { label: 'Cedula', def: 'cedula', dataKey: 'cedula' },
       { label: 'Servicio', def: 'servicio', dataKey: 'servicio.tipoServicio.nombreServicio', dataType: 'object' },
-      { label: 'Puestos', def: 'asignacion', dataKey: 'asignacion.tipoEmpleado.nombreTipo', dataType: 'object' }
+      { label: 'Puesto', def: 'asignacion', dataKey: 'asignacion.tipoEmpleado.nombreTipo', dataType: 'object' }
     ]
   }
 
@@ -83,8 +85,13 @@ export class EmpleadosComponent {
   }
 
   abrirDialogEliminar(data: Empleados) {
-    const dialogRef = this.dialog.open(ModalBorrarEmpleadoComponent, {
-      data,
+
+    const tabla: TablaDatos = { nombre: 'empleados', head: 'empleado' }
+    const dialogRef = this.dialog.open(ModalEliminarComponent, {
+      data:{
+        datos:data,
+        nombreTabla: tabla
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -106,12 +113,12 @@ export class EmpleadosComponent {
     }
     this.Empleadoservice.buscarEmpleado(this.cedula)
       .subscribe(
-        (empleados) => {
+        data => {
+
+          this.empleados = [data];
           this.setTableColumns();
-          this.empleados = empleados ? [empleados] : [];
-          this.tableConfig = {showActions:true}
+          this.tableConfig = {showActions:true};
           
-          console.log(empleados);
         },
         (err) => {
           this.hayError = true;

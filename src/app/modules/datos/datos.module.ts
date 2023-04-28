@@ -13,11 +13,8 @@ import { ServiciosComponent } from './pages/servicios/servicios.component';
 import { TipoEmpleadoComponent } from './pages/tipo-empleado/tipo-empleado.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
-import { ModalEliminarComponent } from './components/modal-eliminar/modal-eliminar.component';
 import { FormularioTipoempleadoComponent } from './components/formulario-tipoempleado/formulario-tipoempleado.component';
-import { ModalEliminarPuestoComponent } from './components/modal-eliminar-puesto/modal-eliminar-puesto.component';
 import { FormularioEmpleadoComponent } from './components/formulario-empleado/formulario-empleado.component';
-import { ModalBorrarEmpleadoComponent } from './components/modal-borrar-empleado/modal-borrar-empleado.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 
@@ -28,11 +25,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     EmpleadosComponent,
     ServiciosComponent,
     TipoEmpleadoComponent,
-    ModalEliminarComponent,
     FormularioTipoempleadoComponent,
-    ModalEliminarPuestoComponent,
     FormularioEmpleadoComponent,
-    ModalBorrarEmpleadoComponent
   ],
   exports: [
     FormularioServiciosComponent,

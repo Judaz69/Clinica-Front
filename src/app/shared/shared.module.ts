@@ -1,23 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppRoutingModule } from '../app-routing.module';
 import {MatTableModule} from '@angular/material/table';
 import { DataTableComponent } from './data-table/data-table.component';
 import { ColumnValuePipe } from './pipes/column-value.pipe';
+import { ModalEliminarComponent } from './modal-eliminar/modal-eliminar.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 
 @NgModule({
   declarations: [
     DataTableComponent,
-    ColumnValuePipe
+    ColumnValuePipe,
+    ModalEliminarComponent
   ],
   exports: [
-    DataTableComponent
+    DataTableComponent,
+    ModalEliminarComponent
   ],
   imports: [
     CommonModule,
-    MatTableModule
+    MatTableModule,
+    MatDialogModule,
+    MatSnackBarModule,
   ]
 })
 export class SharedModule { 

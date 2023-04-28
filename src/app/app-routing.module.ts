@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, CanLoad } from '@angular/router';
+import { ValidarTokenGuard } from './guards/validar-token.guard';
 
 
 const routes: Routes = [
@@ -14,15 +15,21 @@ const routes: Routes = [
     },
     {
         path: 'turnos',
-        loadChildren: () => import ('./modules/consultas/consultas.module').then(m => m.ConsultasModule)
+        loadChildren: () => import ('./modules/consultas/consultas.module').then(m => m.ConsultasModule),
+        canActivate: [ValidarTokenGuard],
+        canLoad: [ValidarTokenGuard]
     },
     {
         path: 'datos',
-        loadChildren: () => import ('./modules/datos/datos.module').then(m => m.DatosModule)
+        loadChildren: () => import ('./modules/datos/datos.module').then(m => m.DatosModule),
+        canActivate: [ValidarTokenGuard],
+        canLoad: [ValidarTokenGuard]
     },
     {
         path: 'dashboard',
-        loadChildren: () => import ('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)
+        loadChildren: () => import ('./modules/dashboard/dashboard.module').then(m => m.DashboardModule),
+        canActivate: [ValidarTokenGuard],
+        canLoad: [ValidarTokenGuard]
     }
 ]
 

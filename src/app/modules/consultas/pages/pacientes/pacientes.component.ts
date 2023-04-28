@@ -4,9 +4,10 @@ import { ClienteServiciosService } from '../../services/cliente-servicios.servic
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { FormularioPacienteComponent } from '../../components/formulario-paciente/formulario-paciente.component';
-import { BorrarPacienteComponent } from '../../components/borrar-paciente/borrar-paciente.component';
 import { DataTable } from 'src/app/shared/interfaces/dataTable.interface';
 import { TableConfig } from 'src/app/shared/interfaces/tableConfigModel';
+import { TablaDatos } from 'src/app/shared/interfaces/tablaDatos.interface';
+import { ModalEliminarComponent } from 'src/app/shared/modal-eliminar/modal-eliminar.component';
 
 
 @Component({
@@ -85,8 +86,13 @@ export class PacientesComponent implements OnInit {
 
   abrirDialogEliminar(data: Pacientes)
   {
-    const dialogRef = this.dialog.open(BorrarPacienteComponent, {
-      data,
+    const tabla: TablaDatos = { nombre: 'pacientes', head: 'paciente' }
+    
+    const dialogRef = this.dialog.open(ModalEliminarComponent, {
+      data:{
+        datos:data,
+        nombreTabla: tabla
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {

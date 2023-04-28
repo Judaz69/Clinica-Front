@@ -6,9 +6,10 @@ import { ClienteServiciosService } from '../../services/cliente-servicios.servic
 import { Pacientes } from '../../interfaces/clienter.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { FormularioTurnosComponent } from '../../components/formulario-turnos/formulario-turnos.component';
-import { ModalEliminarTurnoComponent } from '../../components/modal-eliminar-turno/modal-eliminar-turno.component';
 import { TableConfig } from 'src/app/shared/interfaces/tableConfigModel';
 import { DataTable } from 'src/app/shared/interfaces/dataTable.interface';
+import { TablaDatos } from 'src/app/shared/interfaces/tablaDatos.interface';
+import { ModalEliminarComponent } from 'src/app/shared/modal-eliminar/modal-eliminar.component';
 
 @Component({
   selector: 'app-consultas',
@@ -69,7 +70,7 @@ export class ConsultasComponent {
       {label: 'Nombres', def: 'nombres', dataKey: 'paciente.nombres', dataType: 'object'},
       {label: 'Apellidos', def: 'apellidos', dataKey: 'paciente.apellidos', dataType: 'object'},
       {label: 'Cedula', def: 'cedula', dataKey: 'paciente.cedula', dataType: 'object'},
-      {label: 'hora de la consulta', def: 'horaConsulta', dataKey: 'horaConsulta', dataType: 'date'},
+      {label: 'hora de la consulta', def: 'horaConsulta', dataKey: 'horaConsulta', dataType: 'date', formatt: 'M/d/yy, h:mm a'},
     ]
   }
 
@@ -96,8 +97,13 @@ export class ConsultasComponent {
   
   abrirDialogEliminar(data: Consulta)
   {
-    const dialogRef = this.dialog.open(ModalEliminarTurnoComponent, {
-      data,
+    const tabla: TablaDatos = { nombre: 'turnos', head: 'turno' }
+    
+    const dialogRef = this.dialog.open(ModalEliminarComponent, {
+      data:{
+        datos:data,
+        nombreTabla: tabla
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {

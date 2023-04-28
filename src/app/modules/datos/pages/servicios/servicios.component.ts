@@ -1,12 +1,14 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ServiciosService } from '../../services/servicios.service';
 import { Servicios } from '../../interfaces/servicios.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { FormularioServiciosComponent } from '../../components/formulario-servicios/formulario-servicios.component';
-import { ModalEliminarComponent } from '../../components/modal-eliminar/modal-eliminar.component';
 import { DataTable } from 'src/app/shared/interfaces/dataTable.interface';
 import { TableConfig } from 'src/app/shared/interfaces/tableConfigModel';
+import { ModalEliminarComponent } from 'src/app/shared/modal-eliminar/modal-eliminar.component';
+import { TablaDatos } from 'src/app/shared/interfaces/tablaDatos.interface';
+
 
 @Component({
   selector: 'app-servicios',
@@ -28,6 +30,7 @@ import { TableConfig } from 'src/app/shared/interfaces/tableConfigModel';
 export class ServiciosComponent implements OnInit {
 
   servicios: Servicios[] = [];
+  
   form: FormGroup;
   accion:string= 'agregar';
   id: number | undefined;
@@ -70,7 +73,7 @@ export class ServiciosComponent implements OnInit {
   abrirDialogEditar(data: Servicios)
   { 
     const dialogRef = this.dialog.open(FormularioServiciosComponent, {
-      data,
+      data
       
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -80,8 +83,14 @@ export class ServiciosComponent implements OnInit {
 
   abrirDialogEliminar(data: Servicios)
   {
+    
+    const tabla: TablaDatos = { nombre: 'servicios', head: 'servicio' }
+
     const dialogRef = this.dialog.open(ModalEliminarComponent, {
-      data,
+      data:{
+        datos:data,
+        nombreTabla: tabla
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {

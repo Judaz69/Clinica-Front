@@ -12,7 +12,7 @@ export class ColumnValuePipe implements PipeTransform {
 
     switch (column.dataType) {
       case 'date':
-        if (column.formatt === undefined) {
+        if (column.formatt != undefined) {
           displayValue = new DatePipe('es').transform(displayValue, column.formatt);
         }
         break;

@@ -1,9 +1,9 @@
-<h2 mat-dialog-title>Esta seguro de eliminar este puesto?</h2>
+<h2 mat-dialog-title class="text-white">Esta seguro de eliminar el {{data.nombreTabla.head}}?</h2>
 <div mat-dialog-content> 
 
 </div>
 
-<div mat-dialog-actions>
+<div mat-dialog-action class="d-flex justify-content-center">
     <button mat-dialog-close (click)="eliminar()" class="btn btn-danger">Eliminar</button>
     <button mat-dialog-close class="btn btn-secondary">Cancelar</button>
 </div>
